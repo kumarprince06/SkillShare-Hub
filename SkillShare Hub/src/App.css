@@ -1,0 +1,9 @@
+:root {
+  --primary: #06bbcc;
+  --light: #f0fbfc;
+  --dark: #181d38;
+}
+
+.min-vh {
+  height: calc(100vh - 130px);
+}

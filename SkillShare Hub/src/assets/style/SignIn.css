@@ -1,0 +1,308 @@
+:root {
+  --primary: #06bbcc;
+  --light: #f0fbfc;
+  --dark: #181d38;
+}
+/* ===================================== Import Less ================================== */
+@font-face {
+  font-family: "mouse-300";
+  src: url("../fonts/RobotoSlab-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "mouse-500";
+  src: url("../fonts/RobotoSlab-Bold.ttf") format("truetype");
+}
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap');
+/* ===================================== Basic CSS ================================== */
+
+
+/*# sourceMappingURL=style.css.map */
+
+/* SIgnup Page Css */
+
+.mainContainer {
+  min-height: calc(100vh - 400px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.flex-container {
+  border-radius: 20px;
+  overflow: hidden;
+}
+.getstarted-col {
+  background-image: url('https://img.freepik.com/premium-photo/digital-education-concept-with-laptop-graduation-cap-symbolizing-online-learning-academic-success_124865-82889.jpg');
+  background-position: center;
+  background-size: cover;
+  border-radius: 20px;
+}
+.getstarted-col .content:after {
+  background: rgb(12,37,68);
+  background: linear-gradient(90deg, rgba(12,37,68,1) 0%, rgba(23,53,95,1) 35%, rgba(26,72,111,1) 100%);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0.95;
+  content: '';
+  z-index: 0;
+  border-radius: 15px;
+}
+.content-icon img {
+  max-width: 200px;
+}
+.child-w-100 > * {
+  width: 100%;
+  z-index: 1;
+}
+
+
+
+/* BUTTONS */
+.btn.btn-semitransparent {
+  background: #06bbcc;
+  color: #fff;
+}
+.signup-options-list button {
+  width: 100%;
+  transition: 0.2s background-color ease-in-out;
+}
+.signup-options-list button:hover {
+  background-color: #fffbe7;
+}
+
+/* colors */
+.text-secondary2 {
+  color: #cdcdcd;
+}
+.icon-fb {
+  color: #3B5997;
+}
+.icon-google {
+  color: #F44242;
+}
+
+
+/* INPUTS */
+.default-input {
+  width: 100%;
+  border: 1px solid #cccccc70;
+  background: #EBF3F5;
+  padding-right: 30px;
+}
+
+.show-password {
+  position: absolute;
+  top: 50%;
+  right: -25px;
+  transform: translate(0, -50%) scale(1.25);
+  opacity: 0.45;
+  transition: 0.2s all ease-in-out;
+}
+.show-password:hover {
+  opacity: 1;
+}
+.show-password .icon {
+  display: none;
+}
+.show-password.show .fa-eye-slash.icon {
+  display: block ;
+  cursor: pointer;
+}
+.show-password:not(.show) .fa-eye.icon {
+  display: block ;
+  cursor: pointer;
+}
+form {
+  width: 85%;
+  margin: 0 auto;
+}
+
+.social-btn i {
+  margin-right: 8px; /* Adjust this value to increase/decrease the gap */
+}
+
+.social-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.social-btn:hover{
+  background-color: #06bbcc;
+}
+
+
+@media screen and (min-width: 768px) {
+  .column {
+      width: 50%;
+  }
+  .content-icon img {
+      max-width: 270px;
+  }
+}
+
+@media screen and (min-width: 991px) {
+  .icon-feedback {
+      transform: translate(0, -50%) scale(1.5);
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .content-icon img {
+      max-width: 300px;
+  }
+  form {
+      width: 95%;
+  }
+  .show-password {
+      right: -30px;
+  }
+}
+
+
+@media screen and (min-width: 1366px) {
+  .signup-options-list button {
+      width: 49%;
+  }
+  .form-wrapper {
+      width: 450px;
+  }
+}
+
+.login-section{
+  background: url('https://www.euroschoolindia.com/wp-content/uploads/2023/08/technology-education.jpg') no-repeat;
+  width: 100%;
+  height: 100vh;
+  background-position: center;
+  background-size: cover;
+}
+
+.login-section::before{
+    content: "";
+    background-color: #0009;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+  
+}
+.form-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: 400px;
+  height: 550px;
+  background: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: 20px;
+  backdrop-filter: blur(15px);                
+
+}
+
+.form-box h2 {
+  color: #fff;
+  text-align: center;
+  font-size: 2em;                
+}
+
+.form-box .inputbox {
+  position: relative;
+  border-bottom: 2px solid #fff;
+  margin: 30px 0;
+  width: 310px;                
+}
+
+.form-box .inputbox label {
+  transform: translateY(-50%);
+  color: #fff;
+  font-size: 1em;
+  pointer-events: none;
+  transition: .5s;
+  position: absolute;
+  top: 50%;
+  left: 5px;                
+}
+
+.form-box input:focus~label,
+.form-box input:valid~label {
+  top: -5px;
+}
+
+.form-box .inputbox input {
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 1em;
+  padding: 0 35px 0 5px;
+  color: #fff;
+  width: 100%;
+  height: 50px;               
+}
+
+.form-box .inputbox ion-icon {
+  font-size: 1.2em;
+  position: absolute;
+  right: 8px;
+  color: #fff;                
+  top: 20px;
+}
+
+.form-box .forget {
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  margin: -15px 0 15px;
+  font-size: .9em;                
+}
+
+.form-box .forget label {
+  color: #fff;
+}
+
+.form-box .forget label input {
+  margin-right: 3px;
+
+}
+
+.form-box .forget label a,
+.form-box .forget a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.form-box .forget label a:hover {
+  text-decoration: underline;
+}
+
+.form-box button {
+  width: 100%;
+  height: 40px;
+  border-radius: 40px;
+  background: #fff;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-size: 1em;
+  font-weight: 600;
+}
+
+.form-box .register {
+  font-size: .9em;
+  color: #fff;
+  text-align: center;
+  margin: 25px 0 10px;
+}
+
+.form-box .register p a {
+  text-decoration: none;
+  color: #fff;
+  font-weight: 600;
+}
+
+.form-box .register p a:hover {
+  text-decoration: underline;
+}
+
