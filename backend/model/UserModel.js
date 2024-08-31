@@ -67,15 +67,15 @@ const userSchema = new mongoose.Schema(
     },
     degree: {
       type: String,
-      required: true,
+    },
+    branch:{
+      type: String,
     },
     college: {
       type: String,
-      required: true,
     },
     passingYear: {
-      type: Number,
-      required: true,
+      type: String,
     },
   },
   {

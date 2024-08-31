@@ -1,6 +1,6 @@
 import React from "react";
 import '../../assets/style/CustomModal.css'
-const UserBioModal = () => {
+const UserBioModal = ({handleCloseModal, handleOnChange,handleSubmit, data}) => {
   return (
     <div
       id="costumModal"
@@ -25,10 +25,11 @@ const UserBioModal = () => {
               className="btn-close btn-danger"
               data-bs-dismiss="modal"
               aria-label="Close"
+              onClick={handleCloseModal}
             ></button>
           </div>
           <div className="modal-body">
-            <form>
+            <form onSubmit={handleSubmit}>
               <div className="mb-3">
                 <label
                   htmlFor="message-text"
@@ -41,6 +42,9 @@ const UserBioModal = () => {
                   placeholder="Enter your bio.."
                   id="message-text"
                   defaultValue={""}
+                  onChange={handleOnChange}
+                  name="bio"
+                  value={data?.bio}
                 />
               </div>
               <div className="modal-footer">
@@ -48,7 +52,7 @@ const UserBioModal = () => {
                   className="btn btn-default"
                   data-dismiss="modal"
                   style={{marginLeft: "-5px"}}
-                  // onClick={handleDeleteImage}
+                  onClick={handleCloseModal}
                 >
                   Close
                 </button>

@@ -10,8 +10,6 @@ import UserBioModal from "../../components/UserModal/UserBioModal";
 import UserSkillModal from "../../components/UserModal/UserSkillModal";
 import UserEducationModal from "../../components/UserModal/UserEducationModal";
 import ProfileImg from "../../assets/images/avatar.png";
-
-
 const Profile = () => {
   const user = useSelector((state) => state.user.user);
   const { userDetail } = useContext(context);
@@ -34,8 +32,24 @@ const Profile = () => {
     instagramurl: user?.instagramurl,
     twitterurl: user?.twitterurl,
     linkedinurl: user?.linkedinurl,
+    skills: user?.skills || [],
+    college: user?.college,
+    degree: user?.degree,
+    branch: user?.branch,
+    passingYear: user?.passingYear,
+    bio: user?.bio,
   });
   // console.log("Prpfile Data: ", profileData);
+
+  // Function to handle updating skills
+  const handleSkillUpdate = (updatedSkills) => {
+    setProfileData((prevData) => ({
+      ...prevData,
+      skills: updatedSkills, // Update the skills in profileData
+    }));
+
+    handleSubmit();
+  };
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
@@ -97,6 +111,9 @@ const Profile = () => {
         setFormSubmitted(true);
         handleCloseModal();
         userDetail();
+        SetBioModal(false);
+        setEduModal(false);
+        setSkillModal(false);
       } else if (result.error) {
         toast.error(result.message);
       }
@@ -111,7 +128,15 @@ const Profile = () => {
 
   //Bio
   const handleBioModal = () => {
-    SetBioModal(true);
+    SetBioModal((prev) => !prev);
+  };
+
+  const handleEduModal = () => {
+    setEduModal((prev) => !prev);
+  };
+
+  const handleSkillModal = () => {
+    setSkillModal((prev) => !prev);
   };
 
   return (
@@ -129,7 +154,11 @@ const Profile = () => {
         <div className="d-flex flex-lg-row flex-column p-5 mx-1 mb-4 justify-content-around  bg-opacity-10 rounded shadow">
           <div className="m-2 w-100">
             <div className="text-center rounded">
-              <img src={user?.profilepic || ProfileImg} className="rounded w-75 mt-xl-3 mt-lg-5 py-2" alt={user?.name} />
+              <img
+                src={user?.profilepic || ProfileImg}
+                className="rounded w-75 mt-xl-3 mt-lg-5 py-2"
+                alt={user?.name}
+              />
             </div>
             <div className="w-100 mt-2">
               <ul className="list-unstyled d-flex flex-row justify-content-around mx-lg-5 btn-bg rounded">
@@ -219,60 +248,75 @@ const Profile = () => {
             </div>
           </div>
           <div>
-            <p>
-              Edith is simply dummy text of the printing and typesetting
-              industry. Lorem Ipsum has been the industry's standard dummy text
-              ever since the 1500s, when an unknown printer took a galley of
-              type and scrambled it to make a type specimen book.
-            </p>
-            <p class="mb-0">
-              It is a long established fact that a reader will be distracted by
-              the readable content of a page when looking at its layout. The
-              point of usin F
-            </p>
+            <p className="fw-bolder">{user?.bio}</p>
           </div>
         </div>
         {/* Skill Section */}
         <div className="m-2 py-3 d-flex flex-column">
           <div className="d-flex flex-row justify-content-between">
-            <div
-              className=" sction-title mx-5 wow fadeInUp mb-0"
-              data-wow-delay="0.1s"
-            >
+            <div className=" sction-title mx-5 mb-0" data-wow-delay="0.1s">
               <h6 className="section-title bg-white text-left text-primary px-2">
                 Skills
               </h6>
             </div>
             <div>
-              <i className="fa-solid fa-pen-to-square text-info"></i>
+              <button
+                className="btn"
+                data-bs-toggle="modal"
+                onClick={handleSkillModal}
+              >
+                <i className="fa-solid fa-pen-to-square text-info"></i>
+              </button>
             </div>
           </div>
           <div>
-            <button className="btn-bg">React JS</button>{" "}
-            <button className="btn-bg">MongoDB</button>{" "}
-            <button className="btn-bg">Express JS</button>{" "}
-            <button className="btn-bg">Node JS</button>{" "}
-            <button className="btn-bg">Java</button>{" "}
-            <button className="btn-bg">MySQL</button>
+            {profileData.skills && profileData.skills.length > 0 ? (
+              profileData.skills.map((skill, index) => (
+                <button
+                  key={index}
+                  className="btn-bg m-1 rounded p-1 text-center"
+                  type="button"
+                  disabled // Makes the button non-clickable
+                >
+                  {skill}
+                </button>
+              ))
+            ) : (
+              <p>No skills available</p> // Fallback if no skills are present
+            )}
           </div>
         </div>
         {/* Education Section */}
         <div className="m-2 py-3 d-flex flex-column">
           <div className="d-flex flex-row justify-content-between">
-            <div
-              className=" sction-title mx-5 wow fadeInUp mb-0"
-              data-wow-delay="0.1s"
-            >
+            <div className=" sction-title mx-5 mb-0" data-wow-delay="0.1s">
               <h6 className="section-title bg-white text-left text-primary px-2">
                 Education
               </h6>
             </div>
             <div>
-              <i className="fa-solid fa-pen-to-square text-info"></i>
+              <button
+                className="btn"
+                data-bs-toggle="modal"
+                onClick={handleEduModal}
+              >
+                <i className="fa-solid fa-pen-to-square text-info"></i>
+              </button>
             </div>
           </div>
-          <div>
-            Dr. Sudhir Chandra Sur Institute of Technology & Sports Complex
+          <div className="mb-2">
+            <p className="mb-1">
+              <strong>College:</strong> {user?.college}
+            </p>
+            <p className="mb-1">
+              <strong>Degree:</strong> {user?.degree}
+            </p>
+            <p className="mb-1">
+              <strong>Branch:</strong> {user?.branch}
+            </p>
+            <p className="mb-1">
+              <strong>Passing Year:</strong> {user?.passingYear}
+            </p>
           </div>
         </div>
       </div>
@@ -286,9 +330,37 @@ const Profile = () => {
           handleSubmit={handleSubmit}
         />
       )}
-      {/* Bio Update Modal */ bioModal && (<UserBioModal />)}
-      {/* Skill Update Modal */ skillModal && <UserSkillModal />}
-      {/* Education Update Modal */ eduModal && <UserEducationModal />}
+      {
+        /* Bio Update Modal */ bioModal && (
+          <UserBioModal
+            handleCloseModal={handleBioModal}
+            handleSubmit={handleSubmit}
+            data={profileData}
+            handleOnChange={handleOnChange}
+          />
+        )
+      }
+      {
+        /* Skill Update Modal */ skillModal && (
+          <UserSkillModal
+            handleCloseModal={handleSkillModal}
+            handleSubmit={handleSubmit}
+            data={profileData}
+            handleOnChange={handleOnChange}
+            handleSkillUpdate={handleSkillUpdate}
+          />
+        )
+      }
+      {
+        /* Education Update Modal */ eduModal && (
+          <UserEducationModal
+            handleCloseModal={handleEduModal}
+            handleSubmit={handleSubmit}
+            data={profileData}
+            handleOnChange={handleOnChange}
+          />
+        )
+      }
     </div>
   );
 };

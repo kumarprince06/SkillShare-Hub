@@ -61,7 +61,7 @@ const UserPanel = () => {
         </div>
         <div className="p-4 mt-5">
           <h1 className="wow fadeInUp">
-            <Link to={"dashboard"} className="logo">
+            <Link to={"dashboard"} className="logo" style={{textDecoration: "none"}}>
               My Account
             </Link>
           </h1>

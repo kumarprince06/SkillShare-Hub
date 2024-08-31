@@ -49,6 +49,7 @@
   display: block;
   color: #fff;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  text-decoration: none;
 }
 #sidebar ul li a span {
   color: #fff !important;

@@ -51,10 +51,11 @@ const MyCourse = () => {
       ) : data.length > 0 ? (
         data.map((course, index) => (
           <Link
-            className="bg-info rounded bg-opacity-10 p-1 m-2 w-100 wow fadeINLeft d-block"
+            className="bg-info rounded bg-opacity-10 p-1 m-2 w-100 wow fadeINLeft d-block text-dark"
             data-wow-delay="0.1s"
             key={index}
             to={`/course-details/${course?.courseId?._id}`}
+            style={{textDecoration: "none"}}
           >
             <div className="d-flex flex-md-row flex-column m-2">
               <div className="w-lg-25 w-sm-100 flex-lg-none flex-10 m-1 ">
@@ -70,7 +71,7 @@ const MyCourse = () => {
                 />
               </div>
               <div className="w-lg-75 w-100 px-lg-5 px-0">
-                <h6
+                <h6 className="fw-bolder"
                   style={{
                     width: "100%",
                     whiteSpace: "nowrap",

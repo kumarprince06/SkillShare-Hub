@@ -198,7 +198,7 @@ const CourseDetails = () => {
                   <h6 className="section-title bg-white text-left text-primary px-3">
                     Course Details
                   </h6>
-                  <h1 className="mb-5 display-4">{course?.name}</h1>
+                  <h1 className="mb-5">{course?.name}</h1>
                 </div>
                 <img
                   className="img-fluid rounded w-100 mb-4"
