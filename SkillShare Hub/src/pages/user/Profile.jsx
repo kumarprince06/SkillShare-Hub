@@ -156,7 +156,7 @@ const Profile = () => {
             <div className="text-center rounded">
               <img
                 src={user?.profilepic || ProfileImg}
-                className="rounded w-75 mt-xl-3 mt-lg-5 py-2"
+                className="w-75 mt-xl-3 mt-lg-5 py-2 rounded-circle"
                 alt={user?.name}
               />
             </div>
@@ -233,7 +233,7 @@ const Profile = () => {
               className=" sction-title mx-5 wow fadeInUp mb-0"
               data-wow-delay="0.1s"
             >
-              <h6 className="section-title bg-white text-left text-primary px-2">
+              <h6 className="section-title bg-white text-left text-primary px-2 fw-bolder">
                 About Me
               </h6>
             </div>
@@ -255,7 +255,7 @@ const Profile = () => {
         <div className="m-2 py-3 d-flex flex-column">
           <div className="d-flex flex-row justify-content-between">
             <div className=" sction-title mx-5 mb-0" data-wow-delay="0.1s">
-              <h6 className="section-title bg-white text-left text-primary px-2">
+              <h6 className="section-title bg-white text-left text-primary px-2 fw-bolder">
                 Skills
               </h6>
             </div>
@@ -274,7 +274,7 @@ const Profile = () => {
               profileData.skills.map((skill, index) => (
                 <button
                   key={index}
-                  className="btn-bg m-1 rounded p-1 text-center"
+                  className="btn-bg m-1 rounded p-1 text-center fw-bolder"
                   type="button"
                   disabled // Makes the button non-clickable
                 >
@@ -290,7 +290,7 @@ const Profile = () => {
         <div className="m-2 py-3 d-flex flex-column">
           <div className="d-flex flex-row justify-content-between">
             <div className=" sction-title mx-5 mb-0" data-wow-delay="0.1s">
-              <h6 className="section-title bg-white text-left text-primary px-2">
+              <h6 className="section-title bg-white text-left text-primary px-2 fw-bolder">
                 Education
               </h6>
             </div>

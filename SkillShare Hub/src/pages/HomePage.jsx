@@ -41,7 +41,7 @@ const HomePage = () => {
       <Carousel />
       <Services />
       <About />
-      <CourcesCategory />
+      {/* <CourcesCategory /> */}
       <Cources />
       <WebinarCard />
       <Instructor/>
