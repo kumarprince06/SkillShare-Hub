@@ -101,9 +101,23 @@ const CourseDetails = () => {
       body: JSON.stringify(data),
     });
     const orderDetails = await fetchCreateOrder.json();
-    if(orderDetails.error){
-      navigate("/login")
-      toast.error(orderDetails.message)
+    if (orderDetails.error) {
+      if (orderDetails.status === 401) {
+        // If the user is not logged in
+        navigate("/login");
+        // toast.error("Hiiting to login")
+        toast.error(orderDetails.message);
+      } else if (orderDetails.status === 409) {
+        // Course already enrolled
+        // toast.error("Hiiting to course already enroll")
+        toast.error(orderDetails.message || "Course Already Enrolled!");
+      } else {
+        // Handle other potential errors
+        // toast.error("Hiiting to others")
+        // navigate("/login");
+        toast.error(orderDetails.message || "An error occurred.");
+      }
+      return;
     }
 
     const options = {

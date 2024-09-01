@@ -139,6 +139,7 @@ const Course = () => {
       name: course.name, // Include course name
       price: course.price,
     };
+    // alert("Hiitng")
     const fetchCreateOrder = await fetch(SummaryAPI.createOrder.url, {
       method: SummaryAPI.createOrder.method,
       credentials: "include",
@@ -150,13 +151,23 @@ const Course = () => {
 
     const orderDetails = await fetchCreateOrder.json();
     // console.log("Order Create:", orderDetails)
-    if(orderDetails.error){
-      navigate("/login")
-      toast.error(orderDetails.message)
+    if (orderDetails.error) {
+      if (orderDetails.status === 401) {
+        // If the user is not logged in
+        navigate("/login");
+        toast.error("You need to log in to proceed with enrollment.");
+      } else if (orderDetails.status === 409) {
+        // Course already enrolled
+        toast.error(orderDetails.message || "Course Already Enrolled!");
+      } else {
+        // Handle other potential errors
+        // navigate("/login");
+        toast.error(orderDetails.message || "An error occurred.");
+      }
+      return;
     }
-    // if (!orderDetails || !orderDetails.amount || !orderDetails.id) {
-    //   throw new Error("Invalid order details received. Please try again.");
-    // }
+
+    
 
     const options = {
       key: import.meta.env.VITE_APP_RAZORPAY_API_KEY,

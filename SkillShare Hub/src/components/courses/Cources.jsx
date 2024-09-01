@@ -4,11 +4,110 @@ import caurseImg2 from "../../assets/images/course-2.jpg";
 import caurseImg3 from "../../assets/images/course-3.jpg";
 import displayINRCurrency from "../../helper/DisplayINRCurrency";
 import ContentHeading from "../layouts/ContentHeading";
+import { Link, useNavigate } from "react-router-dom";
 import SummaryAPI from "../../common/API";
-import { Link } from "react-router-dom";
-
+import { toast } from "react-toastify";
+import useRazorpay from "react-razorpay";
+import logo from "../../assets/Favicon/favicon-32x32.png";
 const Cources = () => {
   const [data, setData] = useState([]);
+  const [Razorpay] = useRazorpay();
+  const navigate = useNavigate();
+
+  const handleCheckOutPayment = async (course) => {
+    
+    const data = {
+      courseId: course._id, // Include course ID
+      name: course.name, // Include course name
+      price: course.price,
+    };
+    // alert("Hiitng")
+    const fetchCreateOrder = await fetch(SummaryAPI.createOrder.url, {
+      method: SummaryAPI.createOrder.method,
+      credentials: "include",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    const orderDetails = await fetchCreateOrder.json();
+    // console.log("Order Create:", orderDetails)
+    if (orderDetails.error) {
+      if (orderDetails.status === 401) {
+        // If the user is not logged in
+        navigate("/login");
+        toast.error("You need to log in to proceed with enrollment.");
+      } else if (orderDetails.status === 409) {
+        // Course already enrolled
+        toast.error(orderDetails.message || "Course Already Enrolled!");
+      } else {
+        // Handle other potential errors
+        // navigate("/login");
+        toast.error(orderDetails.message || "An error occurred.");
+      }
+      return;
+    }
+
+    
+
+    const options = {
+      key: import.meta.env.VITE_APP_RAZORPAY_API_KEY,
+      amount: orderDetails.data.amount,
+      currency: orderDetails.data.currency,
+      name: "SkillShare Hub",
+      description: "Enroll in course",
+      image: logo,
+      order_id: orderDetails.data.id,
+      handler: async function (response) {
+        const paymentData = {
+          razorpay_order_id: response.razorpay_order_id,
+          razorpay_payment_id: response.razorpay_payment_id,
+          razorpay_signature: response.razorpay_signature,
+        };
+
+        const responseVerify = await fetch(SummaryAPI.verifyPayment.url,{
+          method: SummaryAPI.verifyPayment.method,
+          credentials: "include",
+          headers:{
+            "content-type" : "application/json",
+          },
+          body: JSON.stringify(paymentData)
+        })
+
+        const verifyPayment = await responseVerify.json()
+
+        if (verifyPayment.success) {
+          navigate("/my-account/course")
+          toast.success(verifyPayment.message)
+        }else{
+          toast.error(verifyPayment.message)
+        }
+        
+      },
+      prefill: {
+        name: user?.name,
+        email: user?.email,
+        contact: user?.contact, // Optional: Prefill the user's contact details
+      },
+      notes: {
+        courseId : data?.courseId,
+        userId: user?._id
+      },
+      theme: {
+        color: "#06bbcc", // Customize the color of the Razorpay checkout
+      },
+    };
+    // Open the Razorpay payment window
+    const razorpay = new Razorpay(options);
+    razorpay.open();
+
+    // Handle any errors during the checkout
+    razorpay.on("payment.failed", function (response) {
+      console.error(response.error);
+      toast.error("Payment failed! Please try again.");
+    });
+  };
 
   const fetchCourse = async () => {
     const response = await fetch(SummaryAPI.getCourse.url, {
@@ -56,13 +155,13 @@ const Cources = () => {
                     >
                       Read More
                     </Link>
-                    <a
-                      href="#"
+                    <button
+                      onClick={() => handleCheckOutPayment(course)}
                       className="flex-shrink-0 btn btn-sm btn-primary px-3"
                       style={{ borderRadius: "0 30px 30px 0" }}
                     >
                       Enroll Now
-                    </a>
+                    </button>
                   </div>
                 </div>
                 <div className="text-center p-4 pb-0">
