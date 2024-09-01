@@ -369,6 +369,12 @@
   transform: scale(1.1);
 }
 
+@media (max-width: 768px){
+  .team-item img{
+    height: 500px !important;
+  }
+}
+
 /*** Testimonial ***/
 .testimonial-carousel::before {
   position: absolute;
