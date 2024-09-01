@@ -3,7 +3,6 @@ import WebDevCat from '../../assets/images/webdevelopmentcategory.jpg'
 import DatabaseCat from '../../assets/images/dbcategory.jpg'
 import mern from '../../assets/images/mern.jpg'
 import programCat from '../../assets/images/programminglanguage.jpg'
-import WOW from "wowjs";
 import ContentHeading from "../layouts/ContentHeading";
 
 
