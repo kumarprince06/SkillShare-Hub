@@ -4,7 +4,6 @@ import { Link, useNavigate } from "react-router-dom";
 import SummaryAPI from "../common/API";
 import { toast } from "react-toastify";
 import {  useGoogleLogin } from "@react-oauth/google";
-import FacebookLogin from 'react-facebook-login';
 import axios from 'axios';
 
 const SignUp = () => {
