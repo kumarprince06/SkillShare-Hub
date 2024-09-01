@@ -21,7 +21,7 @@ app.use("/api",router)
 
 const PORT = 8080
 connectMongoDB().then(() =>{
-  app.listen(PORT, () => {
+  app.listen(process.env.PORT || PORT, () => {
     console.log(`Server is running at ${PORT}`)
   })
 })
