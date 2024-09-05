@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 const UserRegistrationController = async (req, res) => {
   try {
     const { email, password, name, contact } = req?.body;
-    console.log(req?.body);
+    // console.log(req?.body);
 
     // Check if the user already exists
     const user = await UserModel.findOne({ email });

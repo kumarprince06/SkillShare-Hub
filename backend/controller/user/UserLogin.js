@@ -8,6 +8,8 @@ const UserLoginController = async(req, res) =>{
 
     const {email, password} = req.body
 
+    // console.log("User Request Body:", req.body)
+
     if(!email){
       throw new Error("Please enter email..!")
     }
@@ -23,6 +25,8 @@ const UserLoginController = async(req, res) =>{
       throw new Error("No user exist with this email..!")
     }
 
+    // console.log("Database User:", user)
+
     const checkPassword = await bcrypt.compare(password, user.password)
 
     // console.log("Check Password", checkPassword)
@@ -33,6 +37,7 @@ const UserLoginController = async(req, res) =>{
         _id : user._id,
         email : user.email,
       }
+
 
       const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET_KEY, { expiresIn: 60 * 60 * 12 })
       const tokenOption = {

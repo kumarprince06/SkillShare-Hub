@@ -14,6 +14,7 @@ const SignUp = () => {
     email: "",
     contact: "",
     password: "",
+    profilepic: ""
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -82,11 +83,13 @@ const SignUp = () => {
           }
         )
         .then(async (res) => {
+          console.log("Google Response: ", res)
           const googleUserData = {
             name: res.data.name,
             email: res.data.email,
             contact: "", // You might want to add a field for contact if required
-            password: "", // You might want to handle password differently
+            password: res.data.id, // You might want to handle password differently
+            profilepic: res.data.picture,
           };
 
           // Send Google user data to backend

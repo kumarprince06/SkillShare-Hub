@@ -1,14 +1,17 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "../assets/style/SignIn.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Link, useNavigate } from "react-router-dom";
 import SummaryAPI from "../common/API";
 import { toast } from "react-toastify";
 import context from "../context/Context";
+import {  useGoogleLogin } from "@react-oauth/google";
+import axios from 'axios';
 
 const SignIn = () => {
   const navigate = useNavigate();
   const { userDetail } = useContext(context);
+  const [user, setUser] = useState(null);
   const [data, setData] = useState({
     email: "",
     password: "",
@@ -52,6 +55,64 @@ const SignIn = () => {
 
   // console.log("Data", data)
 
+  //Google Authenticaltion Login
+    // Google Authentication SignUp
+    const GoogleLogin = useGoogleLogin({
+      onSuccess: (codeResponse) =>{ 
+        setUser(codeResponse)
+        if (user) {
+          axios
+            .get(
+              `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${user.access_token}`,
+                  Accept: "application/json",
+                },
+              }
+            )
+            .then(async (res) => {
+              console.log("Google Response: ", res)
+              const googleUserData = {
+                email: res.data.email,
+                password: res.data.id, // You might want to handle password differently
+              };
+    
+              // Send Google user data to backend
+              try {
+                const response = await fetch(SummaryAPI.login.url, {
+                  method: SummaryAPI.login.method,
+                  headers: {
+                    "content-type": "application/json",
+                  },
+                  credentials: "include",
+                  body: JSON.stringify(googleUserData),
+                });
+    
+                const result = await response.json();
+                console.log(result);
+                if (result.success) {
+                  toast.success(result.message);
+                  userDetail();
+                  navigate("/");
+                } else {
+                  toast.error(result.message);
+                }
+              } catch (error) {
+                toast.error("An error occurred during registration");
+              }
+            })
+            .catch((err) => console.log(err));
+        }
+
+      },
+      onError: (error) => console.log("Login Failed:", error),
+    });
+  
+    // useEffect(() => {
+      
+    // }, [user]);
+
   return (
     <section className="d-flex justify-content-center align-items-center login-section">
       <div className="form-box">
@@ -94,7 +155,7 @@ const SignIn = () => {
                 <i className="fab fa-facebook icon-fb"></i>
                 Login with Facebook
               </button>
-              <button onClick={() => login()}>
+              <button onClick={() => GoogleLogin()}>
                 <i className="fab fa-google icon-google"></i>
                 Login with Google
               </button>
