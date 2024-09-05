@@ -21,17 +21,19 @@
 /* SIgnup Page Css */
 
 .mainContainer {
-  min-height: calc(100vh - 400px);
+  min-height: calc(100vh - 500px);
   display: flex;
   justify-content: center;
   align-items: center;
 }
+
 .flex-container {
   border-radius: 20px;
   overflow: hidden;
 }
 .getstarted-col {
   background-image: url('https://img.freepik.com/premium-photo/digital-education-concept-with-laptop-graduation-cap-symbolizing-online-learning-academic-success_124865-82889.jpg');
+  height: calc(100vh);
   background-position: center;
   background-size: cover;
   border-radius: 20px;
@@ -281,7 +283,6 @@ form {
   width: 100%;
   height: 40px;
   border-radius: 40px;
-  background: #fff;
   border: none;
   outline: none;
   cursor: pointer;
@@ -306,3 +307,46 @@ form {
   text-decoration: underline;
 }
 
+/* Facebook and Google Icon Color */
+/* Add this to your SignIn.css or another appropriate CSS file */
+
+.btn-google,
+.btn-facebook {
+  border-radius: 50px; /* Same border radius */
+  font-weight: bold; /* Bold font */
+  text-transform: uppercase; /* Uppercase text */
+  display: flex; /* Flexbox for centering */
+  align-items: center; /* Center items vertically */
+  justify-content: center; /* Center items horizontally */
+  padding: 0.5rem 1rem; /* Consistent padding */
+  font-size: 0.875rem; /* Consistent font size */
+  border: 1px solid transparent; /* Border to match button color */
+}
+
+.btn-google {
+  background-color: #db4437; /* Google Red */
+  color: #fff; /* White text color */
+  border-color: #db4437; /* Border color */
+}
+
+.btn-google:hover {
+  background-color: #c1351d; /* Darker shade for hover */
+  border-color: #c1351d; /* Border color on hover */
+}
+
+.btn-facebook {
+  background-color: #4267B2; /* Facebook Blue */
+  color: #fff; /* White text color */
+  border-color: #4267B2; /* Border color */
+}
+
+.btn-facebook:hover {
+  background-color: #365899; /* Darker shade for hover */
+  border-color: #365899; /* Border color on hover */
+}
+
+/* Ensure icons have consistent size and margin */
+.btn i {
+  font-size: 1.25rem; /* Consistent icon size */
+  margin-right: 0.5rem; /* Consistent spacing between icon and text */
+}

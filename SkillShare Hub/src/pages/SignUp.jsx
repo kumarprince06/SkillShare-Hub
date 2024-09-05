@@ -3,8 +3,9 @@ import "../assets/style/SignIn.css";
 import { Link, useNavigate } from "react-router-dom";
 import SummaryAPI from "../common/API";
 import { toast } from "react-toastify";
-import {  useGoogleLogin } from "@react-oauth/google";
-import axios from 'axios';
+import { useGoogleLogin } from "@react-oauth/google";
+import axios from "axios";
+import FacebookLogin from "react-facebook-login";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -14,14 +15,11 @@ const SignUp = () => {
     email: "",
     contact: "",
     password: "",
-    profilepic: ""
+    profilepic: "",
   });
 
   const [showPassword, setShowPassword] = useState(false);
-
   const [user, setUser] = useState(null);
-  const [facebookUser, setFacebookUser] = useState(null);
-  const [googleUser, setGoogleUser] = useState(null);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -30,18 +28,15 @@ const SignUp = () => {
   const handleOnChange = (e) => {
     const { name, value } = e.target;
 
-    setData((prev) => {
-      return {
-        ...prev,
-        [name]: value,
-      };
-    });
+    setData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Sending data to the backend
     try {
       const response = await fetch(SummaryAPI.register.url, {
         method: SummaryAPI.register.method,
@@ -52,7 +47,6 @@ const SignUp = () => {
       });
 
       const result = await response.json();
-      console.log(result);
       if (result.success) {
         toast.success(result.message);
         navigate("/login");
@@ -83,16 +77,14 @@ const SignUp = () => {
           }
         )
         .then(async (res) => {
-          // console.log("Google Response: ", res)
           const googleUserData = {
             name: res.data.name,
             email: res.data.email,
-            contact: "", // You might want to add a field for contact if required
-            password: res.data.id, // You might want to handle password differently
+            contact: "",
+            password: res.data.id,
             profilepic: res.data.picture,
           };
 
-          // Send Google user data to backend
           try {
             const response = await fetch(SummaryAPI.register.url, {
               method: SummaryAPI.register.method,
@@ -103,7 +95,6 @@ const SignUp = () => {
             });
 
             const result = await response.json();
-            console.log(result);
             if (result.success) {
               toast.success(result.message);
               navigate("/login");
@@ -118,18 +109,17 @@ const SignUp = () => {
     }
   }, [user]);
 
-
   // Facebook Authentication SignUp
   const handleFacebookResponse = async (response) => {
     if (response.accessToken) {
       const facebookUserData = {
         name: response.name,
         email: response.email,
-        contact: "", // You might want to add a field for contact if required
-        password: "", // You might want to handle password differently
+        contact: "",
+        password: response.id,
+        profilepic: response.picture.data.url
       };
 
-      // Send Facebook user data to backend
       try {
         const response = await fetch(SummaryAPI.register.url, {
           method: SummaryAPI.register.method,
@@ -140,7 +130,6 @@ const SignUp = () => {
         });
 
         const result = await response.json();
-        console.log(result);
         if (result.success) {
           toast.success(result.message);
           navigate("/login");
@@ -155,7 +144,7 @@ const SignUp = () => {
 
   return (
     <div className="mainContainer">
-      <div className="container">
+      <div className="container signup-container">
         <div className="logiform-container py-4">
           <div className="flex-container d-flex flex-wrap justify-content-center bg-light p-0">
             <div className="column d-block p-3 p-md-4 p-lg-5 getstarted-col">
@@ -169,8 +158,9 @@ const SignUp = () => {
                   <span className="text-secondary2">Hi Welcome!</span>
                   <h2 className="text-white">Let's Get Started</h2>
                   <p className="text-secondary2 mt-4">
-                    Create free account and get free access of full features for
-                    7 days. We invite you to join us and get better experience.
+                    Create a free account and get free access to full features
+                    for 7 days. We invite you to join us and get a better
+                    experience.
                   </p>
                 </div>
                 <div className="content-icon position-relative">
@@ -185,7 +175,7 @@ const SignUp = () => {
             <div className="column d-block p-3 d-flex align-items-center justify-content-center h-100">
               <div className="content">
                 <div className="form-wrapper py-4">
-                  <h2 className="mb-2">Sign Up</h2>
+                  <h2 className="mb-2 fw-bolder display-4 text-center">Sign Up</h2>
                   <form onSubmit={handleSubmit}>
                     <div className="form-input mb-2 p-0">
                       <label htmlFor="yourName" className="text-secondary">
@@ -220,7 +210,7 @@ const SignUp = () => {
                       </div>
                     </div>
                     <div className="form-input mb-2 p-0">
-                      <label htmlFor="yourEmail" className="text-secondary">
+                      <label htmlFor="yourContact" className="text-secondary">
                         Your Contact
                       </label>
                       <div className="input-relative position-relative mt-1 mt-lg-2">
@@ -228,7 +218,7 @@ const SignUp = () => {
                           type="text"
                           className="default-input rounded-pill py-1 ps-3 py-lg-2 input-required"
                           name="contact"
-                          id="yourcontact"
+                          id="yourContact"
                           onChange={handleOnChange}
                           value={data.contact}
                           maxLength={10}
@@ -247,62 +237,60 @@ const SignUp = () => {
                           id="yourPassword"
                           onChange={handleOnChange}
                           value={data.password}
-                          maxLength={40}
                         />
-                        <div
-                          id="showPassword"
-                          className="show-password"
+                        <button
+                          type="button"
+                          className="btn btn-link position-absolute"
+                          style={{
+                            right: "10px",
+                            top: "50%",
+                            transform: "translateY(-50%)",
+                          }}
                           onClick={togglePasswordVisibility}
-                          style={{ cursor: "pointer" }}
                         >
-                          {showPassword ? (
-                            <i className="fas fa-eye-slash"></i>
-                          ) : (
-                            <i className="fas fa-eye"></i>
-                          )}
-                        </div>
+                          {showPassword ? <i class="fa-solid fa-eye-slash"></i> : <i class="fa-solid fa-eye"></i>}
+                        </button>
                       </div>
                     </div>
-                    <div className="form-check mb-2 p-0">
-                      <input
-                        type="checkbox"
-                        name="rememberme"
-                        id="rememberMe"
-                      />
-                      <label htmlFor="rememberMe">Remember me</label>
-                    </div>
-                    <div className="form-submit">
+                    <div className="form-input mb-3 p-0 text-center mt-3">
                       <button
-                        id="btnCreateAccount"
                         type="submit"
-                        className="btn btn-success w-100 rounded-pill py-lg-2 mt-1 mt-lg-2"
+                        className="btn btn-primary rounded-pill fw-bolder fs-4 px-4 w-100"
                       >
-                        Create Account
+                        Sign Up
                       </button>
+                    </div>
+                    <div className="text-center my-2">
+                      <span className="text-secondary">Or Sign Up with</span>
+                    </div>
+                    <div className="d-flex flex-md-row justify-content-center align-items-center">
+                      <button
+                        type="button"
+                        className="btn btn-google d-flex flex-md-row align-items-center justify-content-center m-2"
+                        onClick={() => login()}
+                      >
+                        <i className="fab fa-google me-2" />
+                        Google
+                      </button>
+                      <FacebookLogin
+                        appId={import.meta.env.VITE_APP_FACEBOOK_APP_ID}
+                        autoLoad={false}
+                        fields="name,email,picture"
+                        cssClass="btn btn-facebook rounded-pill py-2 px-2 px-lg-3 m-2"
+                        callback={handleFacebookResponse}
+                        icon={<i className="fab fa-facebook-f me-2" />}
+                        textButton="Facebook"
+                      />
+                    </div>
+                    <div className="text-center mt-4">
+                      <span className="text-secondary">
+                        Already have an account?{" "}
+                        <Link to="/login" className="text-primary text-decoration-none">
+                          Login
+                        </Link>
+                      </span>
                     </div>
                   </form>
-                  <div className="other-options-signup text-center py-3">
-                    <span className="text-dark">Or</span>
-                    <div className="signup-options-list d-flex flex-wrap gap-2 mt-2">
-                      <button className="btn border rounded-pill py-lg-2 social-btn">
-                        <i className="fab fa-facebook icon-fb"></i>
-                        Signup with Facebook
-                      </button>
-                      <button className="btn border rounded-pill py-lg-2 social-btn" onClick={() => login()}>
-                        <i className="fab fa-google icon-google"></i>
-                        Signup with Google
-                      </button>
-                    </div>
-                  </div>
-                  <div className="have-account-option text-center mt-2">
-                    <p>
-                      Already have an account?
-                      <Link to={"/login"} className="text-decoration-none">
-                        {" "}
-                        Log in
-                      </Link>
-                    </p>
-                  </div>
                 </div>
               </div>
             </div>

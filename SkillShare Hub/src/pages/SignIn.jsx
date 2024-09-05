@@ -5,8 +5,9 @@ import { Link, useNavigate } from "react-router-dom";
 import SummaryAPI from "../common/API";
 import { toast } from "react-toastify";
 import context from "../context/Context";
-import {  useGoogleLogin } from "@react-oauth/google";
-import axios from 'axios';
+import { useGoogleLogin } from "@react-oauth/google";
+import axios from "axios";
+import FacebookLogin from "react-facebook-login";
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -56,69 +57,97 @@ const SignIn = () => {
   // console.log("Data", data)
 
   //Google Authenticaltion Login
-    // Google Authentication SignUp
-    const GoogleLogin = useGoogleLogin({
-      onSuccess: (codeResponse) =>{ 
-        setUser(codeResponse)
-        if (user) {
-          axios
-            .get(
-              `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`,
-              {
-                headers: {
-                  Authorization: `Bearer ${user.access_token}`,
-                  Accept: "application/json",
-                },
-              }
-            )
-            .then(async (res) => {
-              console.log("Google Response: ", res)
-              const googleUserData = {
-                email: res.data.email,
-                password: res.data.id, // You might want to handle password differently
-              };
-    
-              // Send Google user data to backend
-              try {
-                const response = await fetch(SummaryAPI.login.url, {
-                  method: SummaryAPI.login.method,
-                  headers: {
-                    "content-type": "application/json",
-                  },
-                  credentials: "include",
-                  body: JSON.stringify(googleUserData),
-                });
-    
-                const result = await response.json();
-                console.log(result);
-                if (result.success) {
-                  toast.success(result.message);
-                  userDetail();
-                  navigate("/");
-                } else {
-                  toast.error(result.message);
-                }
-              } catch (error) {
-                toast.error("An error occurred during registration");
-              }
-            })
-            .catch((err) => console.log(err));
-        }
+  // Google Authentication SignUp
+  const GoogleLogin = useGoogleLogin({
+    onSuccess: (codeResponse) => {
+      setUser(codeResponse);
+      if (user) {
+        axios
+          .get(
+            `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`,
+            {
+              headers: {
+                Authorization: `Bearer ${user.access_token}`,
+                Accept: "application/json",
+              },
+            }
+          )
+          .then(async (res) => {
+            console.log("Google Response: ", res);
+            const googleUserData = {
+              email: res.data.email,
+              password: res.data.id, // You might want to handle password differently
+            };
 
-      },
-      onError: (error) => console.log("Login Failed:", error),
-    });
-  
-    // useEffect(() => {
-      
-    // }, [user]);
+            // Send Google user data to backend
+            try {
+              const response = await fetch(SummaryAPI.login.url, {
+                method: SummaryAPI.login.method,
+                headers: {
+                  "content-type": "application/json",
+                },
+                credentials: "include",
+                body: JSON.stringify(googleUserData),
+              });
+
+              const result = await response.json();
+              console.log(result);
+              if (result.success) {
+                toast.success(result.message);
+                userDetail();
+                navigate("/");
+              } else {
+                toast.error(result.message);
+              }
+            } catch (error) {
+              toast.error("An error occurred during registration");
+            }
+          })
+          .catch((err) => console.log(err));
+      }
+    },
+    onError: (error) => console.log("Login Failed:", error),
+  });
+
+  // Facebook Authentication SignUp
+  const handleFacebookResponse = async (response) => {
+    // alert("Facebook Response:", response)
+    if (response.accessToken) {
+      const facebookUserData = {
+        email: response.email,
+        password: response.id,
+      };
+
+      try {
+        const response = await fetch(SummaryAPI.login.url, {
+          method: SummaryAPI.login.method,
+          headers: {
+            "content-type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify(facebookUserData),
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          toast.success(result.message);
+          userDetail();
+          navigate("/");
+        } else {
+          toast.error(result.message);
+        }
+      } catch (error) {
+        toast.error("An error occurred during registration");
+      }
+    }
+  };
 
   return (
     <section className="d-flex justify-content-center align-items-center login-section">
       <div className="form-box">
         <div className="form-value">
           <form onSubmit={handleSubmit}>
-            <h2 className="fw-bolder fs-3">Student Login</h2>
+            <h2 className="fw-bolder fs-1 mb-2">Student Login</h2>
             <div className="inputbox">
               <ion-icon name="mail-outline" />
               <input
@@ -146,18 +175,27 @@ const SignIn = () => {
               </label>
               <a href="#">Forgot password?</a>
             </div>
-            <button>Log in</button>
+            <button className="fs-5 btn btn-primary fw-bolder">Log in</button>
           </form>
           <div>
             <div className="text-center text-white fw-bolder m-1">Or</div>
-            <div className=" d-flex flex-row flex-wrap gap-2 mt-2">
-              <button>
-                <i className="fab fa-facebook icon-fb"></i>
-                Login with Facebook
-              </button>
-              <button onClick={() => GoogleLogin()}>
-                <i className="fab fa-google icon-google"></i>
-                Login with Google
+            <div className=" d-flex flex-md-row gap-2 mt-2">
+              <FacebookLogin
+                appId={import.meta.env.VITE_APP_FACEBOOK_APP_ID}
+                autoLoad={false}
+                fields="name,email,picture"
+                cssClass="btn btn-facebook rounded-pill py-2 px-2 px-lg-2 m-2"
+                callback={handleFacebookResponse}
+                icon={<i className="fab fa-facebook-f me-2" />}
+                textButton="Facebook"
+              />
+              <button
+                type="button"
+                className="btn btn-google d-flex flex-md-row align-items-center justify-content-center m-2"
+                onClick={() => login()}
+              >
+                <i className="fab fa-google me-2" />
+                Google
               </button>
             </div>
           </div>
