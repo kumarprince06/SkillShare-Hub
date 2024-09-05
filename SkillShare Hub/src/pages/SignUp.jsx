@@ -83,7 +83,7 @@ const SignUp = () => {
           }
         )
         .then(async (res) => {
-          console.log("Google Response: ", res)
+          // console.log("Google Response: ", res)
           const googleUserData = {
             name: res.data.name,
             email: res.data.email,
