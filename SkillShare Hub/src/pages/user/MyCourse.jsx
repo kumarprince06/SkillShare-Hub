@@ -8,7 +8,7 @@ const MyCourse = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false); // Loading state
   const [currentPage, setCurrentPage] = useState(1); // Current page state
-  const itemsPerPage = 3; // Number of items per page
+  const itemsPerPage = 2; // Number of items per page
 
   const fetchCourse = async () => {
     try {
