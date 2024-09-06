@@ -1,17 +1,23 @@
 {
   "version": 2,
-  "name" : "SkillShare Hub",
+  "name": "SkillShare Hub",
+  "build": {
+    "env": {
+      "NODE_ENV": "production"
+    },
+    "npmInstallFlags": ["--legacy-peer-deps"]
+  },
   "builds": [
-      {
-          "src": "./index.js",
-          "use": "@vercel/node"
-      }
+    {
+      "src": "./index.js",
+      "use": "@vercel/node"
+    }
   ],
   "routes": [
-      {
-          "src": "/(.*)",
-          "dest": "/", 
-          "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
-      }
+    {
+      "src": "/(.*)",
+      "dest": "/",
+      "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+    }
   ]
 }
