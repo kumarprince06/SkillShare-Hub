@@ -1,12 +1,6 @@
 {
   "version": 2,
   "name": "SkillShare Hub",
-  "build": {
-    "env": {
-      "NODE_ENV": "production"
-    },
-    "npmInstallFlags": ["--legacy-peer-deps"]
-  },
   "builds": [
     {
       "src": "./index.js",
