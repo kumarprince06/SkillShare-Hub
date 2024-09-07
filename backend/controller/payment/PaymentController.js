@@ -13,9 +13,9 @@ const PaymentController = async (req, res) => {
   if (digest === req.headers['x-razorpay-signature']) {
     // Handle the webhook event
     const event = req.body.event;
-    // console.log("Event: ", event);
+    console.log("Event: ", event);
     const payload = req.body.payload;
-    // console.log("Payload data: ", payload);
+    console.log("Payload data: ", payload);
 
     if (event === 'payment.captured') {
       // Handle payment captured event
@@ -37,7 +37,7 @@ const PaymentController = async (req, res) => {
         });
 
         const data =  await enrollment.save();
-        console.log("Data: ", data)
+        console.log("Course Data: ", data)
         // console.log('Enrollment record saved:', enrollment);
         res.status(200).json({ status: 'ok' });
       } catch (error) {

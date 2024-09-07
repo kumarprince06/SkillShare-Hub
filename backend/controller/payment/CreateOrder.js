@@ -4,7 +4,7 @@ const CreateOrderControllr = async (req, res) => {
   try {
     const userId = req?.userId;
     const data = req?.body;
-    // console.log("Data: ", data)
+    console.log("Create Order Data: ", data)
     const verifyCourse = await EnrollCourseModel.findOne({
       userId,
       courseId: data?.courseId,
