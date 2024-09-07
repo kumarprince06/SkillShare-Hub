@@ -133,7 +133,6 @@ const Course = () => {
 
   //HandlePayment
   const handleCheckOutPayment = async (course) => {
-    
     const data = {
       courseId: course._id, // Include course ID
       name: course.name, // Include course name
@@ -167,8 +166,6 @@ const Course = () => {
       return;
     }
 
-    
-
     const options = {
       key: import.meta.env.VITE_APP_RAZORPAY_API_KEY,
       amount: orderDetails.data.amount,
@@ -184,24 +181,23 @@ const Course = () => {
           razorpay_signature: response.razorpay_signature,
         };
 
-        const responseVerify = await fetch(SummaryAPI.verifyPayment.url,{
+        const responseVerify = await fetch(SummaryAPI.verifyPayment.url, {
           method: SummaryAPI.verifyPayment.method,
           credentials: "include",
-          headers:{
-            "content-type" : "application/json",
+          headers: {
+            "content-type": "application/json",
           },
-          body: JSON.stringify(paymentData)
-        })
+          body: JSON.stringify(paymentData),
+        });
 
-        const verifyPayment = await responseVerify.json()
+        const verifyPayment = await responseVerify.json();
 
         if (verifyPayment.success) {
-          navigate("/my-account/course")
-          toast.success(verifyPayment.message)
-        }else{
-          toast.error(verifyPayment.message)
+          navigate("/my-account/course");
+          toast.success(verifyPayment.message);
+        } else {
+          toast.error(verifyPayment.message);
         }
-        
       },
       prefill: {
         name: user?.name,
@@ -209,8 +205,8 @@ const Course = () => {
         contact: user?.contact, // Optional: Prefill the user's contact details
       },
       notes: {
-        courseId : data?.courseId,
-        userId: user?._id
+        courseId: data?.courseId,
+        userId: user?._id,
       },
       theme: {
         color: "#06bbcc", // Customize the color of the Razorpay checkout
@@ -287,7 +283,11 @@ const Course = () => {
       <div className="container m-5">
         <div className="row g-4 justify-content-center mb-2">
           {loading ? (
-            <Spinners />
+            <div className="d-flex justify-content-center my-5">
+              <div className="spinner-border text-info" role="status">
+                <span className="sr-only">Loading...</span>
+              </div>
+            </div>
           ) : noCoursesFound ? (
             <div className="col-12 text-center">
               <h4>No Courses Found</h4>
