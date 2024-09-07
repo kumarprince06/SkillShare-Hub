@@ -107,7 +107,7 @@ const Cources = () => {
 
     // Handle any errors during the checkout
     razorpay.on("payment.failed", function (response) {
-      console.error(response.error);
+      // console.error(response.error);
       toast.error("Payment failed! Please try again.");
     });
   };

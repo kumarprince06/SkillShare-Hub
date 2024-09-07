@@ -202,7 +202,7 @@ const Profile = () => {
                   <span className="display-26 text-info fw-bolder me-2 font-weight-600">
                     Experience:
                   </span>
-                  {user?.experience}
+                  {user?.experience ? (user?.experience+" Years"):(" ")}
                 </li>
                 <li className="mb-2 mb-xl-3 display-28">
                   <span className="display-26 text-info fw-bolder me-2 font-weight-600">

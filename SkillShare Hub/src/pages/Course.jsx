@@ -115,7 +115,7 @@ const Course = () => {
       });
 
       const result = await response.json();
-      console.log(result);
+      // console.log(result);
       if (response.status === 401) {
         toast.error(result.message);
         navigate("/login");

@@ -198,7 +198,7 @@ const Webinar = () => {
             </div>
           ))
         ) : (
-          <p>No upcoming webinars available.</p>
+          <div className="m-2 p-2 bg-danger2">No upcoming webinars available.</div>
         )}
       </div>
 

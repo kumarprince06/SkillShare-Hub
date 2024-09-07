@@ -53,7 +53,6 @@ const SignIn = () => {
     }
   };
 
-  // console.log("Data", data)
 
   //Google Authenticaltion Login
   // Google Authentication SignUp
@@ -90,7 +89,7 @@ const SignIn = () => {
               });
 
               const result = await response.json();
-              console.log(result);
+              // console.log(result);
               if (result.success) {
                 toast.success(result.message);
                 userDetail();
@@ -108,7 +107,7 @@ const SignIn = () => {
     onError: (error) => console.log("Login Failed:", error),
   });
 
-  // Facebook Authentication SignUp
+
   // Facebook Authentication SignUp
   useEffect(() => {
     (function (d, s, id) {

@@ -249,7 +249,7 @@ const Webinar = () => {
                 </div>
               ))
             ) : (
-              <p>No webinars enrolled yet.</p>
+              <div className="bg-danger bg-opacity-25 text-center rounded py-2 fw-bolder">No webinars enrolled yet..!</div>
             )}
           </div>
         </div>

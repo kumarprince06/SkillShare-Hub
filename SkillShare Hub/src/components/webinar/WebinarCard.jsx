@@ -133,7 +133,7 @@ const WebinarCard = () => {
               </div>
             ))
           ) : (
-            <p>No upcoming webinars available.</p>
+            <div className="m-2 p-2">No upcoming webinars available.</div>
           )}
         </div>
       </div>

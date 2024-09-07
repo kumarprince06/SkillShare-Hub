@@ -13,9 +13,6 @@ import WebinarCard from "../components/webinar/WebinarCard";
 const HomePage = () => {
   const [showBackToTop, setShowBackToTop] = useState(false);
 
-  const user = useSelector((state)=>state?.user?.user)
-  // console.log(user)
-
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 300) {
