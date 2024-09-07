@@ -7,7 +7,6 @@ import { toast } from "react-toastify";
 import context from "../context/Context";
 import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
-import FacebookLogin from "react-facebook-login";
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -110,36 +109,75 @@ const SignIn = () => {
   });
 
   // Facebook Authentication SignUp
-  const handleFacebookResponse = async (response) => {
-    // alert("Facebook Response:", response)
-    if (response.accessToken) {
-      const facebookUserData = {
-        email: response.email,
-        password: response.id,
-      };
-
-      try {
-        const response = await fetch(SummaryAPI.login.url, {
-          method: SummaryAPI.login.method,
-          headers: {
-            "content-type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify(facebookUserData),
-        });
-
-        const result = await response.json();
-        if (result.success) {
-          toast.success(result.message);
-          userDetail();
-          navigate("/");
-        } else {
-          toast.error(result.message);
-        }
-      } catch (error) {
-        toast.error("An error occurred during registration");
+  // Facebook Authentication SignUp
+  useEffect(() => {
+    (function (d, s, id) {
+      var js,
+        fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) {
+        return;
       }
-    }
+      js = d.createElement(s);
+      js.id = id;
+      js.src = "https://connect.facebook.net/en_US/sdk.js";
+      fjs.parentNode.insertBefore(js, fjs);
+
+      // Move fbAsyncInit initialization here after the SDK is loaded
+      js.onload = function () {
+        window.fbAsyncInit = function () {
+          window.FB.init({
+            appId: import.meta.env.VITE_APP_FACEBOOK_APP_ID, // Your Facebook App ID
+            cookie: true,
+            xfbml: true,
+            version: "v16.0",
+          });
+        };
+      };
+    })(document, "script", "facebook-jssdk");
+  }, []);
+  const handleFacebookLogin = () => {
+    window.FB.login(
+      (response) => {
+        if (response.authResponse) {
+          window.FB.api(
+            "/me",
+            { fields: "name,email,picture" },
+            async (userData) => {
+              console.log("Facebook Userdata: ", userData)
+              const facebookUserData = {
+                email: userData.email,
+                password: userData.id, // Use Facebook ID as password
+              };
+
+              try {
+                const response = await fetch(SummaryAPI.login.url, {
+                  method: SummaryAPI.login.method,
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  credentials: "include",
+                  body: JSON.stringify(facebookUserData),
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                  toast.success(result.message);
+                  userDetail();
+                  navigate("/");
+                } else {
+                  toast.error(result.message);
+                }
+              } catch (error) {
+                toast.error("An error occurred during registration");
+              }
+            }
+          );
+        } else {
+          toast.error("Facebook login failed or cancelled.");
+        }
+      },
+      { scope: "public_profile,email" }
+    );
   };
 
   return (
@@ -180,15 +218,14 @@ const SignIn = () => {
           <div>
             <div className="text-center text-white fw-bolder m-1">Or</div>
             <div className=" d-flex flex-md-row gap-2 mt-2">
-              <FacebookLogin
-                appId={import.meta.env.VITE_APP_FACEBOOK_APP_ID}
-                autoLoad={false}
-                fields="name,email,picture"
-                cssClass="btn btn-facebook rounded-pill py-2 px-2 px-lg-2 m-2"
-                callback={handleFacebookResponse}
-                icon={<i className="fab fa-facebook-f me-2" />}
-                textButton="Facebook"
-              />
+              <button
+                type="button"
+                className="btn btn-facebook d-flex flex-md-row align-items-center justify-content-center m-2"
+                onClick={() => handleFacebookLogin()}
+              >
+                <i className="fab fa-facebook-f me-2" />
+                Facebook
+              </button>
               <button
                 type="button"
                 className="btn btn-google d-flex flex-md-row align-items-center justify-content-center m-2"

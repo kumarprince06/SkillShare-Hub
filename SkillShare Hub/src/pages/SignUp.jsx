@@ -5,7 +5,6 @@ import SummaryAPI from "../common/API";
 import { toast } from "react-toastify";
 import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
-import FacebookLogin from "react-facebook-login";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -110,36 +109,74 @@ const SignUp = () => {
   }, [user]);
 
   // Facebook Authentication SignUp
-  const handleFacebookResponse = async (response) => {
-    if (response.accessToken) {
-      const facebookUserData = {
-        name: response.name,
-        email: response.email,
-        contact: "",
-        password: response.id,
-        profilepic: response.picture.data.url
-      };
-
-      try {
-        const response = await fetch(SummaryAPI.register.url, {
-          method: SummaryAPI.register.method,
-          headers: {
-            "content-type": "application/json",
-          },
-          body: JSON.stringify(facebookUserData),
-        });
-
-        const result = await response.json();
-        if (result.success) {
-          toast.success(result.message);
-          navigate("/login");
-        } else {
-          toast.error(result.message);
-        }
-      } catch (error) {
-        toast.error("An error occurred during registration");
+  useEffect(() => {
+    (function (d, s, id) {
+      var js,
+        fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) {
+        return;
       }
-    }
+      js = d.createElement(s);
+      js.id = id;
+      js.src = "https://connect.facebook.net/en_US/sdk.js";
+      fjs.parentNode.insertBefore(js, fjs);
+  
+      // Move fbAsyncInit initialization here after the SDK is loaded
+      js.onload = function () {
+        window.fbAsyncInit = function () {
+          window.FB.init({
+            appId: import.meta.env.VITE_APP_FACEBOOK_APP_ID, // Your Facebook App ID
+            cookie: true,
+            xfbml: true,
+            version: "v16.0",
+          });
+        };
+      };
+    })(document, "script", "facebook-jssdk");
+  }, []);
+  const handleFacebookLogin = () => {
+    window.FB.login(
+      (response) => {
+        if (response.authResponse) {
+          window.FB.api(
+            "/me",
+            { fields: "name,email,picture" },
+            async (userData) => {
+              const facebookUserData = {
+                name: userData.name,
+                email: userData.email,
+                contact: "",
+                password: userData.id, // Use Facebook ID as password
+                profilepic: userData.picture.data.url,
+              };
+
+              try {
+                const response = await fetch(SummaryAPI.register.url, {
+                  method: SummaryAPI.register.method,
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(facebookUserData),
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                  toast.success(result.message);
+                  navigate("/login");
+                } else {
+                  toast.error(result.message);
+                }
+              } catch (error) {
+                toast.error("An error occurred during registration");
+              }
+            }
+          );
+        } else {
+          toast.error("Facebook login failed or cancelled.");
+        }
+      },
+      { scope: "public_profile,email" }
+    );
   };
 
   return (
@@ -175,7 +212,9 @@ const SignUp = () => {
             <div className="column d-block p-3 d-flex align-items-center justify-content-center h-100">
               <div className="content">
                 <div className="form-wrapper py-4">
-                  <h2 className="mb-2 fw-bolder display-4 text-center">Sign Up</h2>
+                  <h2 className="mb-2 fw-bolder display-4 text-center">
+                    Sign Up
+                  </h2>
                   <form onSubmit={handleSubmit}>
                     <div className="form-input mb-2 p-0">
                       <label htmlFor="yourName" className="text-secondary">
@@ -248,7 +287,11 @@ const SignUp = () => {
                           }}
                           onClick={togglePasswordVisibility}
                         >
-                          {showPassword ? <i class="fa-solid fa-eye-slash"></i> : <i class="fa-solid fa-eye"></i>}
+                          {showPassword ? (
+                            <i class="fa-solid fa-eye-slash"></i>
+                          ) : (
+                            <i class="fa-solid fa-eye"></i>
+                          )}
                         </button>
                       </div>
                     </div>
@@ -272,20 +315,22 @@ const SignUp = () => {
                         <i className="fab fa-google me-2" />
                         Google
                       </button>
-                      <FacebookLogin
-                        appId={import.meta.env.VITE_APP_FACEBOOK_APP_ID}
-                        autoLoad={false}
-                        fields="name,email,picture"
-                        cssClass="btn btn-facebook rounded-pill py-2 px-2 px-lg-3 m-2"
-                        callback={handleFacebookResponse}
-                        icon={<i className="fab fa-facebook-f me-2" />}
-                        textButton="Facebook"
-                      />
+                      <button
+                        type="button"
+                        className="btn btn-facebook d-flex flex-md-row align-items-center justify-content-center m-2"
+                        onClick={() => handleFacebookLogin()}
+                      >
+                        <i className="fab fa-facebook-f me-2" />
+                        Facebook
+                      </button>
                     </div>
                     <div className="text-center mt-4">
                       <span className="text-secondary">
                         Already have an account?{" "}
-                        <Link to="/login" className="text-primary text-decoration-none">
+                        <Link
+                          to="/login"
+                          className="text-primary text-decoration-none"
+                        >
                           Login
                         </Link>
                       </span>
