@@ -13,8 +13,8 @@ const SignIn = () => {
   const { userDetail } = useContext(context);
   const [user, setUser] = useState(null);
   const [data, setData] = useState({
-    email: "",
-    password: "",
+    email: "guest@gmail.com",
+    password: "guest",
   });
 
   const handleOnChange = (e) => {
