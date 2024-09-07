@@ -229,7 +229,7 @@ const SignIn = () => {
               <button
                 type="button"
                 className="btn btn-google d-flex flex-md-row align-items-center justify-content-center m-2"
-                onClick={() => login()}
+                onClick={() => GoogleLogin()}
               >
                 <i className="fab fa-google me-2" />
                 Google
