@@ -9,12 +9,15 @@ import SummaryAPI from "../../common/API";
 import { toast } from "react-toastify";
 import useRazorpay from "react-razorpay";
 import logo from "../../assets/Favicon/favicon-32x32.png";
+import { useSelector } from "react-redux";
 const Cources = () => {
   const [data, setData] = useState([]);
   const [Razorpay] = useRazorpay();
   const navigate = useNavigate();
 
   const handleCheckOutPayment = async (course) => {
+
+    const user = useSelector((state) => state.user.user)
     
     const data = {
       courseId: course._id, // Include course ID
