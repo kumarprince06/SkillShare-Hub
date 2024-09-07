@@ -156,7 +156,7 @@ const Profile = () => {
             <div className="text-center rounded">
               <img
                 src={user?.profilepic || ProfileImg}
-                className="w-75 mt-xl-3 mt-lg-5 py-2 rounded-circle"
+                className="w-50 mt-xl-3 mt-lg-5 py-2 rounded-circle"
                 alt={user?.name}
               />
             </div>
